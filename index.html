@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>簡易密室逃脫大挑戰</title>
+    <title>10關極速密室逃脫大挑戰</title>
     <style>
         body {
             margin: 0;
@@ -21,7 +21,7 @@
         }
         .game-container {
             width: 500px;
-            height: 550px;
+            height: 560px;
             background-color: #162447;
             border: 4px solid #1f4068;
             border-radius: 12px;
@@ -38,7 +38,7 @@
             padding: 12px 20px;
             box-sizing: border-box;
             background-color: #1f4068;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: bold;
         }
         .room-view {
@@ -50,17 +50,16 @@
             align-items: center;
             justify-content: center;
         }
-        /* 門的樣式 */
         .door {
-            width: 160px;
-            height: 240px;
+            width: 140px;
+            height: 210px;
             background-color: #e43f5a;
-            border: 6px solid #b33045;
-            border-radius: 8px;
+            border: 5px solid #b33045;
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 22px;
             font-weight: bold;
             box-shadow: inset 0 0 20px rgba(0,0,0,0.4);
             position: relative;
@@ -68,15 +67,14 @@
         .door::after {
             content: '●';
             position: absolute;
-            right: 15px;
-            top: 110px;
+            right: 12px;
+            top: 95px;
             color: #ffd700;
-            font-size: 20px;
+            font-size: 18px;
         }
-        /* 道具欄 */
         .inventory-bar {
             width: 100%;
-            height: 70px;
+            height: 60px;
             background-color: #1f4068;
             display: flex;
             align-items: center;
@@ -85,15 +83,15 @@
             gap: 10px;
         }
         .slot {
-            width: 50px;
-            height: 50px;
+            width: 42px;
+            height: 42px;
             background-color: #162447;
             border: 2px dashed #e43f5a;
             border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 20px;
             cursor: pointer;
         }
         .slot.has-item {
@@ -101,11 +99,10 @@
             border-color: #ffd700;
             background-color: #243b55;
         }
-        /* 互動物件 */
         .interactive-item {
             position: absolute;
             cursor: pointer;
-            font-size: 36px;
+            font-size: 32px;
             transition: transform 0.2s;
         }
         .interactive-item:hover {
@@ -113,24 +110,25 @@
         }
         .message-box {
             position: absolute;
-            bottom: 85px;
+            bottom: 75px;
             background: rgba(0, 0, 0, 0.85);
-            padding: 8px 16px;
+            padding: 6px 14px;
             border-radius: 6px;
-            font-size: 14px;
+            font-size: 13px;
             color: #ffd700;
             pointer-events: none;
             transition: opacity 0.3s;
+            z-index: 10;
         }
-        /* 控制輸入介面 */
         .control-panel {
-            margin-top: 15px;
+            margin-top: 12px;
             display: flex;
             gap: 8px;
+            align-items: center;
         }
         input, button {
-            padding: 6px 12px;
-            font-size: 14px;
+            padding: 5px 10px;
+            font-size: 13px;
             border-radius: 4px;
             border: none;
         }
@@ -148,25 +146,34 @@
         button:hover {
             background-color: #b33045;
         }
+        .wire {
+            width: 70px;
+            height: 10px;
+            background-color: #555;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .wire.connected {
+            background-color: #2ed573;
+            box-shadow: 0 0 6px #2ed573;
+        }
     </style>
 </head>
 <body>
 
     <div class="game-container">
         <div class="header">
-            <span id="roomTitle">第 1 關：密碼解謎</span>
+            <span id="roomTitle">第 1 關：數字密碼</span>
             <span id="timer">時間: 0秒</span>
         </div>
 
         <div class="room-view" id="roomView">
-            <!-- 房間主視覺與門 -->
             <div class="door" id="mainDoor">門</div>
             <div id="messageBox" class="message-box" style="opacity: 0;">提示訊息</div>
         </div>
 
         <div class="inventory-bar" id="inventoryBar">
-            <span style="font-size: 13px; color: #a0aec0; margin-right: 5px;">道具：</span>
-            <!-- 道具欄位 -->
+            <span style="font-size: 12px; color: #a0aec0; margin-right: 5px;">道具：</span>
             <div class="slot" id="slot0"></div>
             <div class="slot" id="slot1"></div>
         </div>
@@ -196,8 +203,8 @@
             messageBox.innerText = text;
             messageBox.style.opacity = 1;
             setTimeout(() => {
-                messageBox.style.opacity = 0;
-            }, 2500);
+                messageBox.style.opacity = 2000;
+            }, 2000);
         }
 
         function updateInventory() {
@@ -213,7 +220,6 @@
         }
 
         function loadLevel() {
-            // 清除上一關的互動物件與控制板
             const oldPanel = document.getElementById("controlPanel");
             if (oldPanel) oldPanel.remove();
             
@@ -221,173 +227,127 @@
             oldItems.forEach(el => el.remove());
 
             if (currentLevel === 1) {
-                roomTitle.innerText = "第 1 關：數字密碼";
+                roomTitle.innerText = "第 1 關：數字密碼 (提示:4876)";
                 mainDoor.style.display = "flex";
-                
-                // 佈置房間道具
-                let note = document.createElement("div");
-                note.className = "interactive-item";
-                note.innerHTML = "📜";
-                note.style.left = "80px";
-                note.style.top = "150px";
-                note.onclick = () => showMessage("紙條上的數字是：4 8 7 6");
-                roomView.appendChild(note);
-
-                // 輸入密碼面板
                 createControlPanel(`
-                    <input type="text" id="passInput" placeholder="輸入4位密碼" style="width:110px;">
-                    <button onclick="checkLevel1()">開門</button>
+                    <input type="text" id="p1" placeholder="輸入4876" style="width:100px;">
+                    <button onclick="if(document.getElementById('p1').value==='4876') nextLevel(); else showMessage('密碼錯!');">解鎖</button>
                 `);
 
             } else if (currentLevel === 2) {
-                roomTitle.innerText = "第 2 關：拿鑰匙開門";
+                roomTitle.innerText = "第 2 關：鑰匙解鎖";
                 mainDoor.style.display = "flex";
-
                 let key = document.createElement("div");
                 key.className = "interactive-item";
                 key.innerHTML = "🔑";
-                key.style.left = "380px";
-                key.style.top = "280px";
-                key.onclick = () => {
-                    inventory.push({ id: "key", icon: "🔑", name: "鑰匙" });
-                    updateInventory();
-                    key.remove();
-                    showMessage("你獲得了鑰匙！");
-                };
+                key.style.right = "50px"; key.style.top = "200px";
+                key.onclick = () => { inventory.push({icon:"🔑"}); updateInventory(); key.remove(); showMessage("拿到鑰匙！"); };
                 roomView.appendChild(key);
-
-                createControlPanel(`
-                    <button onclick="checkLevel2()">用鑰匙開門</button>
-                `);
+                createControlPanel(`<button onclick="if(inventory.length>0) nextLevel(); else showMessage('需要鑰匙！');">用鑰匙開門</button>`);
 
             } else if (currentLevel === 3) {
-                roomTitle.innerText = "第 3 關：倒入物品與解謎";
+                roomTitle.innerText = "第 3 關：倒水解謎 (提示:9527)";
                 mainDoor.style.display = "flex";
-
-                // 桌上有一個空杯子，旁邊有水壺與沙子
-                let cup = document.createElement("div");
-                cup.className = "interactive-item";
-                cup.innerHTML = "🥛";
-                cup.style.left = "220px";
-                cup.style.top = "200px";
-                levelState.cupHasWater = false;
-                
-                cup.onclick = () => {
-                    if (inventory.some(i => i.id === "water")) {
-                        // 移除水，杯子裝滿水
-                        inventory = inventory.filter(i => i.id !== "water");
-                        updateInventory();
-                        levelState.cupHasWater = true;
-                        cup.innerHTML = "🥃"; // 變成滿水杯
-                        showMessage("你將水倒入杯中，浮出了隱藏密碼：9527");
-                    } else if (levelState.cupHasWater) {
-                        showMessage("杯子已經裝滿水了，裡面浮著密碼 9527！");
-                    } else {
-                        showMessage("這是一個空杯子，似乎需要往裡面倒些什麼...");
-                    }
-                };
-                roomView.appendChild(cup);
-
-                let waterBottle = document.createElement("div");
-                waterBottle.className = "interactive-item";
-                waterBottle.innerHTML = "🏺";
-                waterBottle.style.left = "80px";
-                waterBottle.style.top = "250px";
-                waterBottle.onclick = () => {
-                    if (!inventory.some(i => i.id === "water")) {
-                        inventory.push({ id: "water", icon: "🏺", name: "水壺" });
-                        updateInventory();
-                        waterBottle.remove();
-                        showMessage("你拿起了水壺！");
-                    }
-                };
-                roomView.appendChild(waterBottle);
-
+                levelState.w = false;
                 createControlPanel(`
-                    <input type="text" id="passInput3" placeholder="輸入浮現的密碼" style="width:120px;">
-                    <button onclick="checkLevel3()">解鎖逃脫</button>
+                    <button onclick="levelState.w=true; showMessage('水倒入杯中，浮現9527');">倒水</button>
+                    <input type="text" id="p3" placeholder="密碼" style="width:70px;">
+                    <button onclick="if(levelState.w && document.getElementById('p3').value==='9527') nextLevel(); else showMessage('未倒水或密碼錯');">開門</button>
                 `);
 
+            } else if (currentLevel === 4) {
+                roomTitle.innerText = "第 4 關：化學試管 (紅+藍)";
+                mainDoor.style.display = "flex";
+                levelState.pots = [];
+                createControlPanel(`
+                    <button onclick="levelState.pots.push('紅'); showMessage('加紅');">🔴紅</button>
+                    <button onclick="levelState.pots.push('藍'); showMessage('加藍');">🔵藍</button>
+                    <button onclick="if(levelState.pots.length===2 && levelState.pots[0]==='紅' && levelState.pots[1]==='藍') nextLevel(); else {showMessage('配方錯'); levelState.pots=[];}">混合</button>
+                `);
+
+            } else if (currentLevel === 5) {
+                roomTitle.innerText = "第 5 關：接通電線";
+                mainDoor.style.display = "flex";
+                levelState.wires = {1:false, 2:false, 3:false};
+                let panel = document.createElement("div");
+                panel.id = "controlPanel"; panel.className = "control-panel";
+                panel
+                        } else if (currentLevel === 6) {
+                roomTitle.innerText = "第 6 關：圖形對齊";
+                mainDoor.style.display = "flex";
+                createControlPanel(`<button onclick="nextLevel()" style="background:#2ed573;">點擊對齊齒輪，通關！</button>`);
+
+            } else if (currentLevel === 7) {
+                roomTitle.innerText = "第 7 關：雷射保全 (密碼:8888)";
+                mainDoor.style.display = "flex";
+                createControlPanel(`
+                    <input type="text" id="p7" placeholder="8888" style="width:80px;">
+                    <button onclick="if(document.getElementById('p7').value==='8888') nextLevel(); else showMessage('保全密碼錯');">解除</button>
+                `);
+
+            } else if (currentLevel === 8) {
+                roomTitle.innerText = "第 8 關：旋轉密碼盤 (提示:1234)";
+                mainDoor.style.display = "flex";
+                createControlPanel(`
+                    <input type="text" id="p8" placeholder="1234" style="width:80px;">
+                    <button onclick="if(document.getElementById('p8').value==='1234') nextLevel(); else showMessage('密碼錯');">開啟</button>
+                `);
+
+            } else if (currentLevel === 9) {
+                roomTitle.innerText = "第 9 關：重力平衡";
+                mainDoor.style.display = "flex";
+                createControlPanel(`<button onclick="nextLevel()" style="background:#2ed573;">校準重力平衡！</button>`);
+
+            } else if (currentLevel === 10) {
+                roomTitle.innerText = "第 10 關：終極逃生門 (密碼:0000)";
+                mainDoor.style.display = "flex";
+                createControlPanel(`
+                    <input type="text" id="p10" placeholder="0000" style="width:80px;">
+                    <button onclick="if(document.getElementById('p10').value==='0000') nextLevel(); else showMessage('最終密碼錯');">逃脫！</button>
+                `);
             } else {
-                // 遊戲通關結算
                 endGame();
             }
         }
 
-        function createControlPanel(htmlContent) {
-            let panel = document.createElement("div");
-            panel.id = "controlPanel";
-            panel.className = "control-panel";
-            panel.innerHTML = htmlContent;
-            roomView.appendChild(panel);
+        function createControlPanel(html) {
+            let p = document.createElement("div");
+            p.id = "controlPanel"; p.className = "control-panel";
+            p.innerHTML = html;
+            roomView.appendChild(p);
         }
 
-        function checkLevel1() {
-            let val = document.getElementById("passInput").value;
-            if (val === "4876") {
-                showMessage("密碼正確！門開了！");
-                currentLevel = 2;
-                setTimeout(loadLevel, 1000);
-            } else {
-                showMessage("密碼錯誤，再找找看線索！");
-            }
-        }
-
-        function checkLevel2() {
-            if (inventory.some(i => i.id === "key")) {
-                showMessage("鑰匙轉動了，成功解鎖！");
-                currentLevel = 3;
-                setTimeout(loadLevel, 1000);
-            } else {
-                showMessage("門被鎖上了，需要鑰匙！");
-            }
-        }
-
-        function checkLevel3() {
-            let val = document.getElementById("passInput3").value;
-            if (val === "9527" && levelState.cupHasWater) {
-                showMessage("通關成功！正在計算總分...");
-                currentLevel = 4;
-                setTimeout(loadLevel, 1200);
-            } else {
-                showMessage("密碼不對，或者杯子還沒加水解謎喔！");
-            }
+        function nextLevel() {
+            showMessage("過關！");
+            currentLevel++;
+            setTimeout(loadLevel, 400);
         }
 
         function endGame() {
             clearInterval(timerInterval);
             mainDoor.style.display = "none";
             
-            // 根據秒數計算總分 (越快分數越高，最高100分)
-            let score = Math.max(10, 100 - (seconds * 2));
-            
-            let rankEmoji = "🥉";
-            let rankTitle = "銅牌逃脫者";
-            
-            if (score >= 85) {
-                rankEmoji = "🏆";
-                rankTitle = "黃金小獎杯 (極速大師)";
-            } else if (score >= 60) {
-                rankEmoji = "🥈";
-                rankTitle = "銀牌逃脫者";
-            }
+            // 20秒內破關直接拿金獎杯 (小於等於20秒給 100 分)
+            let score = seconds <= 20 ? 100 : Math.max(10, 100 - (seconds - 20) * 3);
+            let rankEmoji = seconds <= 20 ? "🏆" : (seconds <= 40 ? "🥈" : "🥉");
+            let rankTitle = seconds <= 20 ? "黃金小獎杯 (閃電極速王)" : "銀牌逃脫者";
 
-            roomTitle.innerText = "逃脫成功！";
+            roomTitle.innerText = "10關全部通關！";
             roomView.innerHTML = `
                 <div style="text-align: center;">
-                    <div style="font-size: 60px; margin-bottom: 10px;">${rankEmoji}</div>
-                    <h2 style="color: #ffd700; margin: 5px 0;">獲得獎項：${rankTitle}</h2>
-                    <p style="font-size: 16px; color: #cbd5e0; margin: 10px 0;">總耗時：${seconds} 秒</p>
-                    <p style="font-size: 18px; color: #fff; font-weight: bold;">最終得分：${score} 分</p>
-                    <button onclick="location.reload()" style="margin-top: 15px;">再玩一次</button>
+                    <div style="font-size: 55px; margin-bottom: 5px;">${rankEmoji}</div>
+                    <h3 style="color: #ffd700; margin: 5px 0;">${rankTitle}</h3>
+                    <p style="font-size: 15px; color: #cbd5e0; margin: 8px 0;">總耗時：${seconds} 秒</p>
+                    <p style="font-size: 16px; color: #fff; font-weight: bold;">最終得分：${score} 分</p>
+                    <button onclick="location.reload()" style="margin-top: 10px;">再玩一次</button>
                 </div>
             `;
             document.getElementById("inventoryBar").style.display = "none";
         }
 
-        // 啟動遊戲
         startTimer();
         loadLevel();
     </script>
 </body>
 </html>
+
